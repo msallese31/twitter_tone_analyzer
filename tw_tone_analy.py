@@ -18,22 +18,11 @@ tone_analyzer = ToneAnalyzerV3Beta(
     version='2016-02-11'
 )
 
-print(json.dumps(tone_analyzer.tone(text='I am very happy'), indent=2))
-
 US_WOE_ID = 23424977
 us_trends = twitter_api.trends.place(_id=US_WOE_ID)
-#print json.dumps(us_trends, indent=1)
-
 tw = json.dumps(us_trends)
 tw_json = json.loads(tw)
 # print tw_json[0]['trends'][0]['name']
-#for et in tw_json:
- #   for cat in et:
-  #      if cat == "trends":
-   #         for trends in et[cat]:
-    #            print trends['name']
-
-#print "**********************************"
 i = 0
 trends_list = []
 for et in tw_json:
@@ -46,3 +35,22 @@ for et in tw_json:
 print trends_list
 for trend in trends_list:
     print trend
+
+#Get tweets
+tweets = ''''''
+tone_dict = {}
+for trends in trends_list:
+    print '*****' + trends + '*****'
+    search = twitter_api.search.tweets(q=trends, count=100, result_type="*popular")
+    for statuses in search['statuses']:
+        tweets += statuses['text'] + "\n"
+    tone = tone_analyzer.tone(text=tweets)
+    for doc_tone in tone['document_tone']['tone_categories'][0]['tones']:
+        tone_name = doc_tone['tone_name']
+        score = doc_tone['score']
+        tone_dict[tone_name] = score
+    print tone_dict
+    tweets = ''''''
+    tone_dict = {}
+    print '*****' + trends + '*****'
+
